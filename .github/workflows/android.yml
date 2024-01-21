@@ -29,6 +29,8 @@ jobs:
       run: |
         app=$(./gradlew -q printAppName)
         ver=$(./gradlew -q printAppVersion)
+        app="MyApplication"
+        ver="0.0"
         tag=release-$ver-$(date +%Y%m%d-%H%M%S)
         echo "ver=$ver" >> $GITHUB_OUTPUT
         echo "tag=$tag" >> $GITHUB_OUTPUT
@@ -43,8 +45,10 @@ jobs:
       id: create_signing
       run: |
         ApplicationName=$(./gradlew -q printAppName)
+        app="MyApplication"
+        ver="0.0"
         echo -n "${JKS}" | base64 --decode > ./${ApplicationName}.jks
-        echo -n "keystore=${ApplicationName}.jks" > ./${ApplicationName}.signing
+        echo -n "keystore=${PWD}/${ApplicationName}.jks" > ./${ApplicationName}.signing
         echo -n "${JKS_PWD}" >> ./${ApplicationName}.signing
         echo -n "${JKS_KEY_ALIAS}" >> ./${ApplicationName}.signing
         echo -n "${JKS_KEY_PWD}" >> ./${ApplicationName}.signing
@@ -97,6 +101,8 @@ jobs:
       run: |
         app=$(./gradlew -q printAppName)
         ver=$(./gradlew -q printAppVersion)
+        app="MyApplication"
+        ver="0.0"
         tag=release-$ver-$(date +%Y%m%d-%H%M%S)
         echo "ver=$ver" >> $GITHUB_OUTPUT
         echo "tag=$tag" >> $GITHUB_OUTPUT
@@ -111,6 +117,8 @@ jobs:
       id: create_signing
       run: |
         ApplicationName=$(./gradlew -q printAppName)
+        app="MyApplication"
+        ver="0.0"
         echo -n "${JKS}" | base64 --decode > ./${ApplicationName}.jks
         echo -n "keystore=${PWD}/${ApplicationName}.jks" > ./${ApplicationName}.signing
         echo -n "${JKS_PWD}" >> ./${ApplicationName}.signing
