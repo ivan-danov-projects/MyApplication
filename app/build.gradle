@@ -82,6 +82,12 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    task printVersionName {
+        doLast {
+            println android.defaultConfig.versionName
+        }
+    }
 }
 
 dependencies {
