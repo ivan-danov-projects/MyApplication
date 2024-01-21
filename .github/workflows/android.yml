@@ -51,9 +51,9 @@ jobs:
         echo "apkRelUName=$app-$ver-release-unsigned.apk" >> $GITHUB_OUTPUT
         echo "apkRelSName=$app-$ver-signedRelease.apk" >> $GITHUB_OUTPUT
         echo "apkDebName=$app-$ver-debug.apk" >> $GITHUB_OUTPUT
-        echo "apkRelUPath=./app/build/outputs/apk/release/$app-$ver-release-unsigned.apk" >> $GITHUB_OUTPUT
-        echo "apkRelSPath=./app/build/outputs/apk/signedRelease/$app-$ver-signedRelease.apk" >> $GITHUB_OUTPUT
-        echo "apkDebPath=./app/build/outputs/apk/debug/$app-$ver-debug.apk" >> $GITHUB_OUTPUT
+        echo "apkRelUPath=./build/outputs/apk/release/$app-$ver-release-unsigned.apk" >> $GITHUB_OUTPUT
+        echo "apkRelSPath=./build/outputs/apk/signedRelease/$app-$ver-signedRelease.apk" >> $GITHUB_OUTPUT
+        echo "apkDebPath=./build/outputs/apk/debug/$app-$ver-debug.apk" >> $GITHUB_OUTPUT
 
     - name: Create signing info
       id: create_signing
@@ -122,9 +122,9 @@ jobs:
         echo "apkRelUName=$app-$ver-release-unsigned.apk" >> $GITHUB_OUTPUT
         echo "apkRelSName=$app-$ver-signedRelease.apk" >> $GITHUB_OUTPUT
         echo "apkDebName=$app-$ver-debug.apk" >> $GITHUB_OUTPUT
-        echo "apkRelUPath=./app/build/outputs/apk/release/$app-$ver-release-unsigned.apk" >> $GITHUB_OUTPUT
-        echo "apkRelSPath=./app/build/outputs/apk/signedRelease/$app-$ver-signedRelease.apk" >> $GITHUB_OUTPUT
-        echo "apkDebPath=./app/build/outputs/apk/debug/$app-$ver-debug.apk" >> $GITHUB_OUTPUT
+        echo "apkRelUPath=./build/outputs/apk/release/$app-$ver-release-unsigned.apk" >> $GITHUB_OUTPUT
+        echo "apkRelSPath=./build/outputs/apk/signedRelease/$app-$ver-signedRelease.apk" >> $GITHUB_OUTPUT
+        echo "apkDebPath=./build/outputs/apk/debug/$app-$ver-debug.apk" >> $GITHUB_OUTPUT
 
     - name: Create signing info
       id: create_signing
