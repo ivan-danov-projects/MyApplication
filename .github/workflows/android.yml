@@ -45,8 +45,7 @@ jobs:
       id: create_signing
       run: |
         ApplicationName=$(./gradlew -q printAppName)
-        app="MyApplication"
-        ver="0.0"
+        ApplicationName="MyApplication"
         echo -n "${JKS}" | base64 --decode > ./${ApplicationName}.jks
         echo -n "keystore=${PWD}/${ApplicationName}.jks" > ./${ApplicationName}.signing
         echo -n "${JKS_PWD}" >> ./${ApplicationName}.signing
@@ -117,8 +116,7 @@ jobs:
       id: create_signing
       run: |
         ApplicationName=$(./gradlew -q printAppName)
-        app="MyApplication"
-        ver="0.0"
+        ApplicationName="MyApplication"
         echo -n "${JKS}" | base64 --decode > ./${ApplicationName}.jks
         echo -n "keystore=${PWD}/${ApplicationName}.jks" > ./${ApplicationName}.signing
         echo -n "${JKS_PWD}" >> ./${ApplicationName}.signing
