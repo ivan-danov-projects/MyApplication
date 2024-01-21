@@ -23,26 +23,21 @@ jobs:
         cache: gradle
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+
     - name: Create version tag
       id: create_tag
       run: |
         app=$(./gradlew -q printAppName)
         ver=$(./gradlew -q printAppVersion)
         tag=release-$ver-$(date +%Y%m%d-%H%M%S)
-        apkreleaseuname=$app-$ver-release-unsigned.apk
-        apkreleasename=$app-$ver-signedRelease.apk
-        apkdebugname=$app-$ver-debug.apk
-        apkreleaseupath=./app/build/outputs/apk/release/$app-$ver-release-unsigned.apk
-        apkreleasenpath=./app/build/outputs/apk/signedRelease/$app-$ver-signedRelease.apk
-        apkdebugpath=./app/build/outputs/apk/debug/$app-$ver-debug.apk
         echo "ver=$ver" >> $GITHUB_OUTPUT
         echo "tag=$tag" >> $GITHUB_OUTPUT
-        echo "apkreleaseuname=$apkreleaseuname" >> $GITHUB_OUTPUT
-        echo "apkreleasename=$apkreleasename" >> $GITHUB_OUTPUT
-        echo "apkdebugname=$apkdebugname" >> $GITHUB_OUTPUT
-        echo "apkreleaseupath=$apkreleaseupath" >> $GITHUB_OUTPUT
-        echo "apkreleasepath=$apkreleasepath" >> $GITHUB_OUTPUT
-        echo "apkdebugpath=$apkdebugpath" >> $GITHUB_OUTPUT
+        echo "apkRelUName=$app-$ver-release-unsigned.apk" >> $GITHUB_OUTPUT
+        echo "apkRelSName=$app-$ver-signedRelease.apk" >> $GITHUB_OUTPUT
+        echo "apkDebName=$app-$ver-debug.apk" >> $GITHUB_OUTPUT
+        echo "apkRelUPath=./app/build/outputs/apk/release/$app-$ver-release-unsigned.apk" >> $GITHUB_OUTPUT
+        echo "apkRelSPath=./app/build/outputs/apk/signedRelease/$app-$ver-signedRelease.apk" >> $GITHUB_OUTPUT
+        echo "apkDebPath=./app/build/outputs/apk/debug/$app-$ver-debug.apk" >> $GITHUB_OUTPUT
 
     - name: Create signing info
       id: create_signing
@@ -103,20 +98,14 @@ jobs:
         app=$(./gradlew -q printAppName)
         ver=$(./gradlew -q printAppVersion)
         tag=release-$ver-$(date +%Y%m%d-%H%M%S)
-        apkreleaseuname=$app-$ver-release-unsigned.apk
-        apkreleasename=$app-$ver-signedRelease.apk
-        apkdebugname=$app-$ver-debug.apk
-        apkreleaseupath=./app/build/outputs/apk/release/$app-$ver-release-unsigned.apk
-        apkreleasenpath=./app/build/outputs/apk/signedRelease/$app-$ver-signedRelease.apk
-        apkdebugpath=./app/build/outputs/apk/debug/$app-$ver-debug.apk
         echo "ver=$ver" >> $GITHUB_OUTPUT
         echo "tag=$tag" >> $GITHUB_OUTPUT
-        echo "apkreleaseuname=$apkreleaseuname" >> $GITHUB_OUTPUT
-        echo "apkreleasename=$apkreleasename" >> $GITHUB_OUTPUT
-        echo "apkdebugname=$apkdebugname" >> $GITHUB_OUTPUT
-        echo "apkreleaseupath=$apkreleaseupath" >> $GITHUB_OUTPUT
-        echo "apkreleasepath=$apkreleasepath" >> $GITHUB_OUTPUT
-        echo "apkdebugpath=$apkdebugpath" >> $GITHUB_OUTPUT
+        echo "apkRelUName=$app-$ver-release-unsigned.apk" >> $GITHUB_OUTPUT
+        echo "apkRelSName=$app-$ver-signedRelease.apk" >> $GITHUB_OUTPUT
+        echo "apkDebName=$app-$ver-debug.apk" >> $GITHUB_OUTPUT
+        echo "apkRelUPath=./app/build/outputs/apk/release/$app-$ver-release-unsigned.apk" >> $GITHUB_OUTPUT
+        echo "apkRelSPath=./app/build/outputs/apk/signedRelease/$app-$ver-signedRelease.apk" >> $GITHUB_OUTPUT
+        echo "apkDebPath=./app/build/outputs/apk/debug/$app-$ver-debug.apk" >> $GITHUB_OUTPUT
 
     - name: Create signing info
       id: create_signing
@@ -156,8 +145,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.upload_info.outputs.upload_url }}
-        asset_path: ${{ steps.create_tag.outputs.apkreleasepath }}
-        asset_name: ${{ steps.create_tag.outputs.apkreleasename }}
+        asset_path: ${{ steps.create_tag.outputs.apkRelSPath }}
+        asset_name: ${{ steps.create_tag.outputs.apkRelSName }}
         asset_content_type: application/vnd.android.package-archive
 
     - name: Upload release
@@ -166,7 +155,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.upload_info.outputs.upload_url }}
-        asset_path: ${{ steps.create_tag.outputs.apkreleaseupath }}
+        asset_path: ${{ steps.create_tag.outputs.apkRelUPath }}
         asset_name: ${{ steps.create_tag.outputs.apkreleaseuname }}
         asset_content_type: application/vnd.android.package-archive
 
@@ -176,8 +165,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.upload_info.outputs.upload_url }}
-        asset_path: ${{ steps.create_tag.outputs.apkdebugpath }}
-        asset_name: ${{ steps.create_tag.outputs.apkdebugname }}
+        asset_path: ${{ steps.create_tag.outputs.apkDebPath }}
+        asset_name: ${{ steps.create_tag.outputs.apkDebName }}
         asset_content_type: application/vnd.android.package-archive
 
   metadata:
