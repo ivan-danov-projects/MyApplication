@@ -7,10 +7,25 @@ on:
   #pull_request:
   #  branches: [ "main" ]
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 jobs:
   release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
+
+
     steps:
     - uses: actions/checkout@v3
       with:
@@ -23,7 +38,6 @@ jobs:
         cache: gradle
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-
     - name: Create version tag
       id: create_tag
       run: |
@@ -48,9 +62,9 @@ jobs:
         ApplicationName="MyApplication"
         echo -n "${JKS}" | base64 --decode > ./${ApplicationName}.jks
         echo -n "keystore=${PWD}/${ApplicationName}.jks" > ./${ApplicationName}.signing
-        echo -n "${JKS_PWD}" >> ./${ApplicationName}.signing
-        echo -n "${JKS_KEY_ALIAS}" >> ./${ApplicationName}.signing
-        echo -n "${JKS_KEY_PWD}" >> ./${ApplicationName}.signing
+        echo -n "keystore.password=${JKS_PWD}" >> ./${ApplicationName}.signing
+        echo -n "keyAlias=${JKS_KEY_ALIAS}" >> ./${ApplicationName}.signing
+        echo -n "keyPassword=${JKS_KEY_PWD}" >> ./${ApplicationName}.signing
       shell: bash
       env:
         JKS: ${{ secrets.JKS}}
@@ -119,9 +133,9 @@ jobs:
         ApplicationName="MyApplication"
         echo -n "${JKS}" | base64 --decode > ./${ApplicationName}.jks
         echo -n "keystore=${PWD}/${ApplicationName}.jks" > ./${ApplicationName}.signing
-        echo -n "${JKS_PWD}" >> ./${ApplicationName}.signing
-        echo -n "${JKS_KEY_ALIAS}" >> ./${ApplicationName}.signing
-        echo -n "${JKS_KEY_PWD}" >> ./${ApplicationName}.signing
+        echo -n "keystore.password=${JKS_PWD}" >> ./${ApplicationName}.signing
+        echo -n "keyAlias=${JKS_KEY_ALIAS}" >> ./${ApplicationName}.signing
+        echo -n "keyPassword=${JKS_KEY_PWD}" >> ./${ApplicationName}.signing
       shell: bash
       env:
         JKS: ${{ secrets.JKS}}
