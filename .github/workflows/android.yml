@@ -25,14 +25,15 @@ jobs:
     - name: Create version tag
       id: create_tag
       run: |
-        ver=$(./gradlew -q printVersionName)
+        app=$(./gradlew -q printAppName)
+        ver=$(./gradlew -q printAppVersion)
         tag=release-$ver-$(date +%Y%m%d-%H%M%S)
-        apkreleaseuname=MyApplication-$ver-release-unsigned.apk
-        apkreleasename=MyApplication-$ver-release.apk
-        apkdebugname=MyApplication-$ver-debug.apk
-        apkreleaseupath=./app/build/outputs/apk/release/MyApplication-$ver-release-unsigned.apk
-        apkreleasenpath=./app/build/outputs/apk/release/MyApplication-$ver-release.apk
-        apkdebugpath=./app/build/outputs/apk/debug/MyApplication-$ver-debug.apk
+        apkreleaseuname=$app-$ver-release-unsigned.apk
+        apkreleasename=$app-$ver-release.apk
+        apkdebugname=$app-$ver-debug.apk
+        apkreleaseupath=./app/build/outputs/apk/release/$app-$ver-release-unsigned.apk
+        apkreleasenpath=./app/build/outputs/apk/release/$app-$ver-release.apk
+        apkdebugpath=./app/build/outputs/apk/debug/$app-$ver-debug.apk
         echo "ver=$ver" >> $GITHUB_OUTPUT
         echo "tag=$tag" >> $GITHUB_OUTPUT
         echo "apkreleaseuname=$apkreleaseuname" >> $GITHUB_OUTPUT
@@ -81,14 +82,15 @@ jobs:
     - name: Create version tag
       id: create_tag
       run: |
-        ver=$(./gradlew -q printVersionName)
+        app=$(./gradlew -q printAppName)
+        ver=$(./gradlew -q printAppVersion)
         tag=release-$ver-$(date +%Y%m%d-%H%M%S)
-        apkreleaseuname=MyApplication-$ver-release-unsigned.apk
-        apkreleasename=MyApplication-$ver-release.apk
-        apkdebugname=MyApplication-$ver-debug.apk
-        apkreleaseupath=./app/build/outputs/apk/release/MyApplication-$ver-release-unsigned.apk
-        apkreleasenpath=./app/build/outputs/apk/release/MyApplication-$ver-release.apk
-        apkdebugpath=./app/build/outputs/apk/debug/MyApplication-$ver-debug.apk
+        apkreleaseuname=$app-$ver-release-unsigned.apk
+        apkreleasename=$app-$ver-release.apk
+        apkdebugname=$app-$ver-debug.apk
+        apkreleaseupath=./app/build/outputs/apk/release/$app-$ver-release-unsigned.apk
+        apkreleasenpath=./app/build/outputs/apk/release/$app-$ver-release.apk
+        apkdebugpath=./app/build/outputs/apk/debug/$app-$ver-debug.apk
         echo "ver=$ver" >> $GITHUB_OUTPUT
         echo "tag=$tag" >> $GITHUB_OUTPUT
         echo "apkreleaseuname=$apkreleaseuname" >> $GITHUB_OUTPUT

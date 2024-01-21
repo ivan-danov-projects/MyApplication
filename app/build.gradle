@@ -66,12 +66,13 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        release {
+        debug {
             minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -83,7 +84,12 @@ android {
         viewBinding true
     }
 
-    task printVersionName {
+    task printAppName {
+        doLast {
+            println "${ApplicationName}"
+        }
+    }
+    task printAppVersion {
         doLast {
             println android.defaultConfig.versionName
         }
@@ -91,7 +97,6 @@ android {
 }
 
 dependencies {
-
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
