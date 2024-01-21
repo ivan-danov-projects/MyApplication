@@ -64,16 +64,40 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    if (new File("${ApplicationName}.signing").exists()) {
+        Properties props = new Properties()
+        props.load(new FileInputStream("${ApplicationName}.signing"))
+        signingConfigs {
+            signedRelease {
+                storeFile file(props['keystore'])
+                storePassword props['keystore.password']
+                keyAlias props['keyAlias']
+                keyPassword props['keyPassword']
+            }
+        }
+    }
+
     buildTypes {
+        debug {
+            versionNameSuffix ".${getVersionID()}"
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
         release {
+            versionNameSuffix ".${getVersionID()}"
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        debug {
-            minifyEnabled false
-            shrinkResources false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        signedRelease {
+            versionNameSuffix ".${getVersionID()}"
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (new File("${ApplicationName}.signing").exists()) {
+                signingConfig signingConfigs.signedRelease
+            }
         }
     }
     compileOptions {

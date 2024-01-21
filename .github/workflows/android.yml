@@ -29,10 +29,10 @@ jobs:
         ver=$(./gradlew -q printAppVersion)
         tag=release-$ver-$(date +%Y%m%d-%H%M%S)
         apkreleaseuname=$app-$ver-release-unsigned.apk
-        apkreleasename=$app-$ver-release.apk
+        apkreleasename=$app-$ver-signedRelease.apk
         apkdebugname=$app-$ver-debug.apk
         apkreleaseupath=./app/build/outputs/apk/release/$app-$ver-release-unsigned.apk
-        apkreleasenpath=./app/build/outputs/apk/release/$app-$ver-release.apk
+        apkreleasenpath=./app/build/outputs/apk/signedRelease/$app-$ver-signedRelease.apk
         apkdebugpath=./app/build/outputs/apk/debug/$app-$ver-debug.apk
         echo "ver=$ver" >> $GITHUB_OUTPUT
         echo "tag=$tag" >> $GITHUB_OUTPUT
@@ -42,6 +42,11 @@ jobs:
         echo "apkreleaseupath=$apkreleaseupath" >> $GITHUB_OUTPUT
         echo "apkreleasepath=$apkreleasepath" >> $GITHUB_OUTPUT
         echo "apkdebugpath=$apkdebugpath" >> $GITHUB_OUTPUT
+        echo -n "${{ secrets.JKS }}" | base64 --decode > ${ApplicationName}.jks
+        echo -n "keystore=../${ApplicationName}.jks" > ${ApplicationName}.signing
+        echo -n "${{ secrets.JKS_PWD }}" >> ${ApplicationName}.signing
+        echo -n "${{ secrets.JKS_KEY_ALIAS }}" >> ${ApplicationName}.signing
+        echo -n "${{ secrets.JKS_KEY_PWD }}" >> ${ApplicationName}.signing
     - name: Create Release
       id: create_release
       uses: comnoco/create-release-action@v2.0.5
@@ -86,10 +91,10 @@ jobs:
         ver=$(./gradlew -q printAppVersion)
         tag=release-$ver-$(date +%Y%m%d-%H%M%S)
         apkreleaseuname=$app-$ver-release-unsigned.apk
-        apkreleasename=$app-$ver-release.apk
+        apkreleasename=$app-$ver-signedRelease.apk
         apkdebugname=$app-$ver-debug.apk
         apkreleaseupath=./app/build/outputs/apk/release/$app-$ver-release-unsigned.apk
-        apkreleasenpath=./app/build/outputs/apk/release/$app-$ver-release.apk
+        apkreleasenpath=./app/build/outputs/apk/signedRelease/$app-$ver-signedRelease.apk
         apkdebugpath=./app/build/outputs/apk/debug/$app-$ver-debug.apk
         echo "ver=$ver" >> $GITHUB_OUTPUT
         echo "tag=$tag" >> $GITHUB_OUTPUT
@@ -99,6 +104,11 @@ jobs:
         echo "apkreleaseupath=$apkreleaseupath" >> $GITHUB_OUTPUT
         echo "apkreleasepath=$apkreleasepath" >> $GITHUB_OUTPUT
         echo "apkdebugpath=$apkdebugpath" >> $GITHUB_OUTPUT
+        echo -n "${{ secrets.JKS }}" | base64 --decode > ${ApplicationName}.jks
+        echo -n "keystore=../${ApplicationName}.jks" > ${ApplicationName}.signing
+        echo -n "${{ secrets.JKS_PWD }}" >> ${ApplicationName}.signing
+        echo -n "${{ secrets.JKS_KEY_ALIAS }}" >> ${ApplicationName}.signing
+        echo -n "${{ secrets.JKS_KEY_PWD }}" >> ${ApplicationName}.signing
 
     - uses: actions/download-artifact@v1
       with:
