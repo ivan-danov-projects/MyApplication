@@ -15,7 +15,7 @@ keytool -genkeypair \
 
 keytool -list -keystore ${OWNER}.keystore -storepass ${STORE_PASS}
 
-base64 ${OWNER}.keystore > ${OWNER}.keystore.base64
+base64 --wrap=0 ${OWNER}.keystore > ${OWNER}.keystore.base64
 
 echo "Set GITHUB SECRETS"
 echo "JKS: " $(cat ${OWNER}.keystore.base64)
