@@ -27,8 +27,20 @@ jobs:
       run: |
         ver=$(./gradlew -q printVersionName)
         tag=release-$ver-$(date +%Y%m%d-%H%M%S)
-        echo "$ver" >> $GITHUB_OUTPUT
-        echo "$tag" >> $GITHUB_OUTPUT
+        apkreleaseuname=MyApplication-$ver-release-unsigned.apk
+        apkreleasename=MyApplication-$ver-release.apk
+        apkdebugname=MyApplication-$ver-debug.apk
+        apkreleaseupath=./app/build/outputs/apk/release/MyApplication-$ver-release-unsigned.apk
+        apkreleasenpath=./app/build/outputs/apk/release/MyApplication-$ver-release.apk
+        apkdebugpath=./app/build/outputs/apk/debug/MyApplication-$ver-debug.apk
+        echo "ver=$ver" >> $GITHUB_OUTPUT
+        echo "tag=$tag" >> $GITHUB_OUTPUT
+        echo "apkreleaseuname=$apkreleaseuname" >> $GITHUB_OUTPUT
+        echo "apkreleasename=$apkreleasename" >> $GITHUB_OUTPUT
+        echo "apkdebugname=$apkdebugname" >> $GITHUB_OUTPUT
+        echo "apkreleaseupath=$apkreleaseupath" >> $GITHUB_OUTPUT
+        echo "apkreleasepath=$apkreleasepath" >> $GITHUB_OUTPUT
+        echo "apkdebugpath=$apkdebugpath" >> $GITHUB_OUTPUT
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
