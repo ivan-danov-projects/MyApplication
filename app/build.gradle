@@ -66,13 +66,13 @@ android {
 
     def signingFile = "${ApplicationName}.signing"
     def signingFileFound = false
-    println "DEBUG: SIGNING CHECK for ${ApplicationName}.signing"
+    // println "DEBUG: SIGNING CHECK for ${ApplicationName}.signing"
     if (new File("${signingFile}").exists()) {
-        println "DEBUG: SIGNING ENABLED"
+        // println "DEBUG: SIGNING ENABLED"
         Properties props = new Properties()
         props.load(new FileInputStream("${ApplicationName}.signing"))
         if (new File(props['keystore']).exists()) {
-            println "DEBUG: Use key " + props['keyAlias'] + " from file " + props['keystore']
+            // println "DEBUG: Use key " + props['keyAlias'] + " from file " + props['keystore']
             signingConfigs {
                 signedRelease {
                     storeFile file(props['keystore'])
@@ -83,11 +83,11 @@ android {
             }
             signingFileFound = true
         } else {
-            println "DEBUG: Use key " + props['keyAlias'] + " from file " + props['keystore'] + ": no keystore!"
+            // println "DEBUG: Use key " + props['keyAlias'] + " from file " + props['keystore'] + ": no keystore!"
             signingFileFound = false;
         }
     } else {
-        println "DEBUG: SIGNING DISABLED 1"
+        // println "DEBUG: SIGNING DISABLED 1"
     }
 
     buildTypes {

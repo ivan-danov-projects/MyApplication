@@ -43,8 +43,6 @@ jobs:
       run: |
         app=$(./gradlew -q printAppName)
         ver=$(./gradlew -q printAppVersion)
-        app="MyApplication"
-        ver="0.0"
         tag=release-$ver-$(date +%Y%m%d-%H%M%S)
         echo "ver=$ver" >> $GITHUB_OUTPUT
         echo "tag=$tag" >> $GITHUB_OUTPUT
@@ -59,7 +57,6 @@ jobs:
       id: create_signing
       run: |
         ApplicationName=$(./gradlew -q printAppName)
-        ApplicationName="MyApplication"
         echo -n "${JKS}" | base64 --decode > ./${ApplicationName}.jks
         echo "keystore=${PWD}/${ApplicationName}.jks" > ./${ApplicationName}.signing
         echo "keystore.password=${JKS_PWD}" >> ./${ApplicationName}.signing
@@ -114,8 +111,6 @@ jobs:
       run: |
         app=$(./gradlew -q printAppName)
         ver=$(./gradlew -q printAppVersion)
-        app="MyApplication"
-        ver="0.0"
         tag=release-$ver-$(date +%Y%m%d-%H%M%S)
         echo "ver=$ver" >> $GITHUB_OUTPUT
         echo "tag=$tag" >> $GITHUB_OUTPUT
@@ -130,7 +125,6 @@ jobs:
       id: create_signing
       run: |
         ApplicationName=$(./gradlew -q printAppName)
-        ApplicationName="MyApplication"
         echo -n "${JKS}" | base64 --decode > ./${ApplicationName}.jks
         echo "keystore=${PWD}/${ApplicationName}.jks" > ./${ApplicationName}.signing
         echo "keystore.password=${JKS_PWD}" >> ./${ApplicationName}.signing
