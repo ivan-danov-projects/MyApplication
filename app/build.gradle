@@ -64,6 +64,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    println ">> SIGNING CHECK for ${ApplicationName}.signing"
     if (new File("${ApplicationName}.signing").exists()) {
         println ">> SIGNING ENABLED"
         Properties props = new Properties()
@@ -77,6 +78,8 @@ android {
             }
         }
         println ">> Use key " + props['keyAlias'] + " from file " + props['keystore']
+    } else {
+        println ">> SIGNING DISABLED 1"
     }
 
     buildTypes {
