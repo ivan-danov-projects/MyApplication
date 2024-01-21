@@ -43,13 +43,13 @@ jobs:
         echo "apkdebugpath=$apkdebugpath" >> $GITHUB_OUTPUT
     - name: Create Release
       id: create_release
-      uses: actions/create-release@v1
+      uses: comnoco/create-release-action@v2.0.5
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ steps.create_tag.outputs.tag }}
         release_name: ${{ steps.create_tag.outputs.tag }}
-        draft: true
+        draft: false
         prerelease: false
     - name: Create artifact files
       run: |
