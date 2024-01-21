@@ -126,6 +126,16 @@ jobs:
       run: find . -name '*.apk'
       working-directory: .
 
+    - name: Upload signed release
+      uses: shogo82148/actions-upload-release-asset@v1.7.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.upload_info.outputs.upload_url }}
+        asset_path: ${{ steps.create_tag.outputs.apkreleasepath }}
+        asset_name: ${{ steps.create_tag.outputs.apkreleasename }}
+        asset_content_type: application/vnd.android.package-archive
+
     - name: Upload release
       uses: shogo82148/actions-upload-release-asset@v1.7.2
       env:
