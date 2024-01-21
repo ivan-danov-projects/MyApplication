@@ -66,54 +66,46 @@ android {
 
     def signingFile = "${ApplicationName}.signing"
     def signingFileFound = false
-    // println "DEBUG: SIGNING CHECK for ${signingFile}"
-    if (new File("${signingFile}").exists()) {
-        // println "DEBUG: ${signingFile} FOUND"
-        signingFileFound = true
-    } else {
-        signingFile = "../${ApplicationName}.signing"
-        if (new File("${signingFile}").exists()) {
-            // println "DEBUG: ${signingFile} FOUND"
-            signingFileFound = true
-        } else {
-            signingFile = "";
-        }
-    }
-
     // println "DEBUG: SIGNING CHECK for ${ApplicationName}.signing"
-    if (signingFileFound) {
+    if (new File("${signingFile}").exists()) {
         // println "DEBUG: SIGNING ENABLED"
         Properties props = new Properties()
         props.load(new FileInputStream("${ApplicationName}.signing"))
-        signingConfigs {
-            signedRelease {
-                storeFile file(props['keystore'])
-                storePassword props['keystore.password']
-                keyAlias props['keyAlias']
-                keyPassword props['keyPassword']
+        if (new File(props['keystore']).exists()) {
+            // println "DEBUG: Use key " + props['keyAlias'] + " from file " + props['keystore']
+            signingConfigs {
+                signedRelease {
+                    storeFile file(props['keystore'])
+                    storePassword props['keystore.password']
+                    keyAlias props['keyAlias']
+                    keyPassword props['keyPassword']
+                }
             }
+            signingFileFound = true
+        } else {
+            // println "DEBUG: Use key " + props['keyAlias'] + " from file " + props['keystore'] + ": no keystore!"
+            signingFileFound = false;
         }
-        // println "DEBUG: Use key " + props['keyAlias'] + " from file " + props['keystore']
-    } else {
-        // println "DEBUG: SIGNING DISABLED 1"
+    // } else {
+    //     println "DEBUG: SIGNING DISABLED 1"
     }
 
     buildTypes {
         debug {
-            versionNameSuffix ".${getVersionID()}-debug"
+            versionNameSuffix ".${getGitHash()}-debug"
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
-            versionNameSuffix ".${getVersionID()}"
+            versionNameSuffix ".${getGitHash()}"
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         if (signingFileFound) {
             signedRelease {
-                versionNameSuffix ".${getVersionID()}"
+                versionNameSuffix ".${getGitHash()}"
                 minifyEnabled true
                 shrinkResources true
                 proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

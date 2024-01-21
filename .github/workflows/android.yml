@@ -112,7 +112,7 @@ jobs:
       run: |
         ApplicationName=$(./gradlew -q printAppName)
         echo -n "${JKS}" | base64 --decode > ./${ApplicationName}.jks
-        echo -n "keystore=${ApplicationName}.jks" > ./${ApplicationName}.signing
+        echo -n "keystore=${PWD}/${ApplicationName}.jks" > ./${ApplicationName}.signing
         echo -n "${JKS_PWD}" >> ./${ApplicationName}.signing
         echo -n "${JKS_KEY_ALIAS}" >> ./${ApplicationName}.signing
         echo -n "${JKS_KEY_PWD}" >> ./${ApplicationName}.signing
