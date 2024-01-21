@@ -61,10 +61,10 @@ jobs:
         ApplicationName=$(./gradlew -q printAppName)
         ApplicationName="MyApplication"
         echo -n "${JKS}" | base64 --decode > ./${ApplicationName}.jks
-        echo -n "keystore=${PWD}/${ApplicationName}.jks" > ./${ApplicationName}.signing
-        echo -n "keystore.password=${JKS_PWD}" >> ./${ApplicationName}.signing
-        echo -n "keyAlias=${JKS_KEY_ALIAS}" >> ./${ApplicationName}.signing
-        echo -n "keyPassword=${JKS_KEY_PWD}" >> ./${ApplicationName}.signing
+        echo "keystore=${PWD}/${ApplicationName}.jks" > ./${ApplicationName}.signing
+        echo "keystore.password=${JKS_PWD}" >> ./${ApplicationName}.signing
+        echo "keyAlias=${JKS_KEY_ALIAS}" >> ./${ApplicationName}.signing
+        echo "keyPassword=${JKS_KEY_PWD}" >> ./${ApplicationName}.signing
       shell: bash
       env:
         JKS: ${{ secrets.JKS}}
@@ -132,10 +132,10 @@ jobs:
         ApplicationName=$(./gradlew -q printAppName)
         ApplicationName="MyApplication"
         echo -n "${JKS}" | base64 --decode > ./${ApplicationName}.jks
-        echo -n "keystore=${PWD}/${ApplicationName}.jks" > ./${ApplicationName}.signing
-        echo -n "keystore.password=${JKS_PWD}" >> ./${ApplicationName}.signing
-        echo -n "keyAlias=${JKS_KEY_ALIAS}" >> ./${ApplicationName}.signing
-        echo -n "keyPassword=${JKS_KEY_PWD}" >> ./${ApplicationName}.signing
+        echo "keystore=${PWD}/${ApplicationName}.jks" > ./${ApplicationName}.signing
+        echo "keystore.password=${JKS_PWD}" >> ./${ApplicationName}.signing
+        echo "keyAlias=${JKS_KEY_ALIAS}" >> ./${ApplicationName}.signing
+        echo "keyPassword=${JKS_KEY_PWD}" >> ./${ApplicationName}.signing
       shell: bash
       env:
         JKS: ${{ secrets.JKS}}
