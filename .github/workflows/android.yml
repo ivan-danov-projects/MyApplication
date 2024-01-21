@@ -43,11 +43,11 @@ jobs:
         echo "apkreleaseupath=$apkreleaseupath" >> $GITHUB_OUTPUT
         echo "apkreleasepath=$apkreleasepath" >> $GITHUB_OUTPUT
         echo "apkdebugpath=$apkdebugpath" >> $GITHUB_OUTPUT
-        echo "${{ secrets.JKS }}" | base64 --decode > ${ApplicationName}.jks
-        echo -n "keystore=../${ApplicationName}.jks" > ${ApplicationName}.signing
-        echo -n "${{ secrets.JKS_PWD }}" >> ${ApplicationName}.signing
-        echo -n "${{ secrets.JKS_KEY_ALIAS }}" >> ${ApplicationName}.signing
-        echo -n "${{ secrets.JKS_KEY_PWD }}" >> ${ApplicationName}.signing
+        echo "${{ secrets.JKS }}" | base64 --decode > ./${ApplicationName}.jks
+        echo -n "keystore=${ApplicationName}.jks" > ./${ApplicationName}.signing
+        echo -n "${{ secrets.JKS_PWD }}" >> ./${ApplicationName}.signing
+        echo -n "${{ secrets.JKS_KEY_ALIAS }}" >> ./${ApplicationName}.signing
+        echo -n "${{ secrets.JKS_KEY_PWD }}" >> ./${ApplicationName}.signing
     - name: Create Release
       id: create_release
       uses: comnoco/create-release-action@v2.0.5
@@ -105,11 +105,11 @@ jobs:
         echo "apkreleaseupath=$apkreleaseupath" >> $GITHUB_OUTPUT
         echo "apkreleasepath=$apkreleasepath" >> $GITHUB_OUTPUT
         echo "apkdebugpath=$apkdebugpath" >> $GITHUB_OUTPUT
-        echo "${{ secrets.JKS }}" | base64 --decode > ${ApplicationName}.jks
-        echo -n "keystore=../${ApplicationName}.jks" > ${ApplicationName}.signing
-        echo -n "${{ secrets.JKS_PWD }}" >> ${ApplicationName}.signing
-        echo -n "${{ secrets.JKS_KEY_ALIAS }}" >> ${ApplicationName}.signing
-        echo -n "${{ secrets.JKS_KEY_PWD }}" >> ${ApplicationName}.signing
+        echo "${{ secrets.JKS }}" | base64 --decode > ./${ApplicationName}.jks
+        echo -n "keystore=${ApplicationName}.jks" > ./${ApplicationName}.signing
+        echo -n "${{ secrets.JKS_PWD }}" >> ./${ApplicationName}.signing
+        echo -n "${{ secrets.JKS_KEY_ALIAS }}" >> ./${ApplicationName}.signing
+        echo -n "${{ secrets.JKS_KEY_PWD }}" >> ./${ApplicationName}.signing
 
     - uses: actions/download-artifact@v1
       with:

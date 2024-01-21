@@ -64,14 +64,14 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    def signingFile = "../${ApplicationName}.signing"
+    def signingFile = "${ApplicationName}.signing"
     def signingFileFound = false
     println "DEBUG: SIGNING CHECK for ${signingFile}"
     if (new File("${signingFile}").exists()) {
         println "DEBUG: ${signingFile} FOUND"
         signingFileFound = true
     } else {
-        signingFile = "${ApplicationName}.signing"
+        signingFile = "../${ApplicationName}.signing"
         if (new File("${signingFile}").exists()) {
             println "DEBUG: ${signingFile} FOUND"
             signingFileFound = true
