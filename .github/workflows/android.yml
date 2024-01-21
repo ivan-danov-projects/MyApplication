@@ -1,10 +1,11 @@
 name: Android CI
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
+  #push:
+  #  branches: [ "main" ]
+  #pull_request:
+  #  branches: [ "main" ]
 
 jobs:
   release:
@@ -42,7 +43,7 @@ jobs:
         echo "apkreleaseupath=$apkreleaseupath" >> $GITHUB_OUTPUT
         echo "apkreleasepath=$apkreleasepath" >> $GITHUB_OUTPUT
         echo "apkdebugpath=$apkdebugpath" >> $GITHUB_OUTPUT
-        echo -n "${{ secrets.JKS }}" | base64 --decode > ${ApplicationName}.jks
+        echo "${{ secrets.JKS }}" | base64 --decode > ${ApplicationName}.jks
         echo -n "keystore=../${ApplicationName}.jks" > ${ApplicationName}.signing
         echo -n "${{ secrets.JKS_PWD }}" >> ${ApplicationName}.signing
         echo -n "${{ secrets.JKS_KEY_ALIAS }}" >> ${ApplicationName}.signing
@@ -104,7 +105,7 @@ jobs:
         echo "apkreleaseupath=$apkreleaseupath" >> $GITHUB_OUTPUT
         echo "apkreleasepath=$apkreleasepath" >> $GITHUB_OUTPUT
         echo "apkdebugpath=$apkdebugpath" >> $GITHUB_OUTPUT
-        echo -n "${{ secrets.JKS }}" | base64 --decode > ${ApplicationName}.jks
+        echo "${{ secrets.JKS }}" | base64 --decode > ${ApplicationName}.jks
         echo -n "keystore=../${ApplicationName}.jks" > ${ApplicationName}.signing
         echo -n "${{ secrets.JKS_PWD }}" >> ${ApplicationName}.signing
         echo -n "${{ secrets.JKS_KEY_ALIAS }}" >> ${ApplicationName}.signing
@@ -120,7 +121,7 @@ jobs:
         echo "upload_url=$upload_url" >> $GITHUB_OUTPUT
 
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew --warning-mode all build
 
     - name: Display artifacts
       run: find . -name '*.apk'

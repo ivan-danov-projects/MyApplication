@@ -65,6 +65,7 @@ android {
     }
 
     if (new File("${ApplicationName}.signing").exists()) {
+        println ">> SIGNING ENABLED"
         Properties props = new Properties()
         props.load(new FileInputStream("${ApplicationName}.signing"))
         signingConfigs {
@@ -75,11 +76,12 @@ android {
                 keyPassword props['keyPassword']
             }
         }
+        println ">> Use key " + props['keyAlias'] + " from file " + props['keystore']
     }
 
     buildTypes {
         debug {
-            versionNameSuffix ".${getVersionID()}"
+            versionNameSuffix ".${getVersionID()}-debug"
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
