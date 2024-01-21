@@ -27,8 +27,8 @@ jobs:
       run: |
         ver=$(./gradlew -q printVersionName)
         tag=release-$ver-$(date +%Y%m%d-%H%M%S)
-        echo "::set-output name=ver::$ver"
-        echo "::set-output name=tag::$tag"
+        echo "name=ver::$ver" >> $GITHUB_OUTPUT
+        echo "name=tag::$tag" >> $GITHUB_OUTPUT
     - name: Create Release
       id: create_release
       uses: actions/create-release@v2
@@ -77,14 +77,14 @@ jobs:
         apkreleaseupath=./app/build/outputs/apk/release/MyApplication-$ver-release-unsigned.apk
         apkreleasenpath=./app/build/outputs/apk/release/MyApplication-$ver-release.apk
         apkdebugpath=./app/build/outputs/apk/debug/MyApplication-$ver-debug.apk
-        echo "::set-output name=ver::$ver"
-        echo "::set-output name=tag::$tag"
-        echo "::set-output name=apkreleaseuname::$apkreleaseuname"
-        echo "::set-output name=apkreleasename::$apkreleasename"
-        echo "::set-output name=apkdebugname::$apkdebugname"
-        echo "::set-output name=apkreleaseupath::$apkreleaseupath"
-        echo "::set-output name=apkreleasepath::$apkreleasepath"
-        echo "::set-output name=apkdebugpath::$apkdebugpath"
+        echo "name=ver::$ver" >> $GITHUB_OUTPUT
+        echo "name=tag::$tag" >> $GITHUB_OUTPUT
+        echo "name=apkreleaseuname::$apkreleaseuname" >> $GITHUB_OUTPUT
+        echo "name=apkreleasename::$apkreleasename" >> $GITHUB_OUTPUT
+        echo "name=apkdebugname::$apkdebugname" >> $GITHUB_OUTPUT
+        echo "name=apkreleaseupath::$apkreleaseupath" >> $GITHUB_OUTPUT
+        echo "name=apkreleasepath::$apkreleasepath" >> $GITHUB_OUTPUT
+        echo "name=apkdebugpath::$apkdebugpath" >> $GITHUB_OUTPUT
 
     - uses: actions/download-artifact@v1
       with:
@@ -93,7 +93,7 @@ jobs:
       id: upload_info
       run: |
         upload_url=$(cat info/upload_url)
-        echo "::set-output name=upload_url::$upload_url"
+        echo "name=upload_url::$upload_url" >> $GITHUB_OUTPUT
 
     - name: Build with Gradle
       run: ./gradlew build
@@ -134,7 +134,7 @@ jobs:
       id: publish_info
       run: |
         release_id=$(cat info/release_id)
-        echo "::set-output name=release_id::$release_id"
+        echo "name=release_id::$release_id" >> $GITHUB_OUTPUT
     - uses: eregon/publish-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
