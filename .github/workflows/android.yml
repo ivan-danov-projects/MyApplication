@@ -43,11 +43,23 @@ jobs:
         echo "apkreleaseupath=$apkreleaseupath" >> $GITHUB_OUTPUT
         echo "apkreleasepath=$apkreleasepath" >> $GITHUB_OUTPUT
         echo "apkdebugpath=$apkdebugpath" >> $GITHUB_OUTPUT
+
+    - name: Create signing info
+      id: create_signing
+      run: |
+        app=$(./gradlew -q printAppName)
         echo "${{ secrets.JKS }}" | base64 --decode > ./${ApplicationName}.jks
         echo -n "keystore=${ApplicationName}.jks" > ./${ApplicationName}.signing
         echo -n "${{ secrets.JKS_PWD }}" >> ./${ApplicationName}.signing
         echo -n "${{ secrets.JKS_KEY_ALIAS }}" >> ./${ApplicationName}.signing
         echo -n "${{ secrets.JKS_KEY_PWD }}" >> ./${ApplicationName}.signing
+      shell: bash
+      env:
+        JKS: ${{ secrets.JKS}}
+        JKS_PWD: ${{ secrets.JKS_PWD}}
+        JKS_KEY_ALIAS: ${{ secrets.JKS_KEY_ALIAS}}
+        JKS_KEY_PWD: ${{ secrets.JKS_KEY_PWD}}
+
     - name: Create Release
       id: create_release
       uses: comnoco/create-release-action@v2.0.5
@@ -105,11 +117,22 @@ jobs:
         echo "apkreleaseupath=$apkreleaseupath" >> $GITHUB_OUTPUT
         echo "apkreleasepath=$apkreleasepath" >> $GITHUB_OUTPUT
         echo "apkdebugpath=$apkdebugpath" >> $GITHUB_OUTPUT
+
+    - name: Create signing info
+      id: create_signing
+      run: |
+        app=$(./gradlew -q printAppName)
         echo "${{ secrets.JKS }}" | base64 --decode > ./${ApplicationName}.jks
         echo -n "keystore=${ApplicationName}.jks" > ./${ApplicationName}.signing
         echo -n "${{ secrets.JKS_PWD }}" >> ./${ApplicationName}.signing
         echo -n "${{ secrets.JKS_KEY_ALIAS }}" >> ./${ApplicationName}.signing
         echo -n "${{ secrets.JKS_KEY_PWD }}" >> ./${ApplicationName}.signing
+      shell: bash
+      env:
+        JKS: ${{ secrets.JKS}}
+        JKS_PWD: ${{ secrets.JKS_PWD}}
+        JKS_KEY_ALIAS: ${{ secrets.JKS_KEY_ALIAS}}
+        JKS_KEY_PWD: ${{ secrets.JKS_KEY_PWD}}
 
     - uses: actions/download-artifact@v1
       with:
