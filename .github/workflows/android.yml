@@ -71,8 +71,20 @@ jobs:
       run: |
         ver=$(./gradlew -q printVersionName)
         tag=release-$ver-$(date +%Y%m%d-%H%M%S)
+        apkreleaseuname=MyApplication-$ver-release-unsigned.apk
+        apkreleasename=MyApplication-$ver-release.apk
+        apkdebugname=MyApplication-$ver-debug.apk
+        apkreleaseupath=./app/build/outputs/apk/release/MyApplication-$ver-release-unsigned.apk
+        apkreleasenpath=./app/build/outputs/apk/release/MyApplication-$ver-release.apk
+        apkdebugpath=./app/build/outputs/apk/debug/MyApplication-$ver-debug.apk
         echo "::set-output name=ver::$ver"
         echo "::set-output name=tag::$tag"
+        echo "::set-output name=apkreleaseuname::$apkreleaseuname"
+        echo "::set-output name=apkreleasename::$apkreleasename"
+        echo "::set-output name=apkdebugname::$apkdebugname"
+        echo "::set-output name=apkreleaseupath::$apkreleaseupath"
+        echo "::set-output name=apkreleasepath::$apkreleasepath"
+        echo "::set-output name=apkdebugpath::$apkdebugpath"
 
     - uses: actions/download-artifact@v1
       with:
@@ -90,25 +102,25 @@ jobs:
       run: find . -name '*.apk'
       working-directory: .
 
-    - name: Upload
+    - name: Upload release
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.upload_info.outputs.upload_url }}
-        asset_path: ./app/build/outputs/apk/debug/MyApplication-${ver}-debug.apk
-        asset_name: MyApplication-${ver}-debug.apk
-        asset_content_type: application/vnd.debian.binary-package
+        asset_path: ${{ steps.create_tag.outputs.apkreleaseupath }}
+        asset_name: ${{ steps.create_tag.outputs.apkreleaseuname }}
+        asset_content_type: application/vnd.android.package-archive
 
-    - name: Upload
+    - name: Upload debug
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.upload_info.outputs.upload_url }}
-        asset_path: ./app/build/outputs/apk/release/MyApplication-${ver}-release-unsigned.apk
-        asset_name: MyApplication-${ver}-release-unsigned.apk
-        asset_content_type: application/vnd.debian.binary-package
+        asset_path: ${{ steps.create_tag.outputs.apkdebugpath }}
+        asset_name: ${{ steps.create_tag.outputs.apkdebugname }}
+        asset_content_type: application/vnd.android.package-archive
 
   metadata:
     name: Publish Release
