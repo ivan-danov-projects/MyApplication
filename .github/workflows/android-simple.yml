@@ -12,16 +12,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      env:
-        GH_TOKEN: ${{ github.token }}
-      run: |
-        gh repo clone $GITHUB_REPOSITORY
-    #- name: Checkout repository
-    #  uses: actions/checkout@v4.1.1
-    #  with:
-    #    fetch-depth: "0"
-
     - name: set up JDK 21
       run: sudo apt-get update && sudo apt install -y openjdk-21-jdk
     #- name: set up JDK 21
@@ -30,6 +20,16 @@ jobs:
     #    java-version: '21'
     #    distribution: 'temurin'
     #    cache: gradle
+
+    - name: Checkout repository
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh repo clone $GITHUB_REPOSITORY .
+    #- name: Checkout repository
+    #  uses: actions/checkout@v4.1.1
+    #  with:
+    #    fetch-depth: "0"
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
