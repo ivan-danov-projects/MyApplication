@@ -56,6 +56,13 @@ jobs:
         JKS_KEY_ALIAS: ${{ secrets.JKS_KEY_ALIAS}}
         JKS_KEY_PWD: ${{ secrets.JKS_KEY_PWD}}
 
+    - name: Build with Gradle
+      run: ./gradlew --warning-mode all build
+
+    - name: Display artifacts
+      run: find . -name '*.apk'
+      working-directory: .
+
     - name: Create Release
       id: create_release
       uses: comnoco/create-release-action@v2.0.5
@@ -66,35 +73,24 @@ jobs:
         release_name: ${{ steps.create_tag.outputs.tag }}
         draft: false
         prerelease: false
-    - name: Create artifact files
-      run: |
-        mkdir info
-        echo "${{ steps.create_release.outputs.id }}" > info/release_id
-        echo "${{ steps.create_release.outputs.upload_url }}" > info/upload_url
-    - uses: actions/upload-artifact@v1
-      with:
-        name: info
-        path: info
 
-    - name: Set upload_url
-      id: upload_info
-      run: |
-        upload_url=$(cat info/upload_url)
-        echo "upload_url=$upload_url" >> $GITHUB_OUTPUT
-
-    - name: Build with Gradle
-      run: ./gradlew --warning-mode all build
-
-    - name: Display artifacts
-      run: find . -name '*.apk'
-      working-directory: .
+    #- name: Create artifact files
+    #  run: |
+    #    mkdir info
+    #    echo "${{ steps.create_release.outputs.id }}" > info/release_id
+    #    echo "${{ steps.create_release.outputs.upload_url }}" > info/upload_url
+    #    echo "${{ steps.create_tag.outputs.apkRelSName }}" > info/upload_url
+    #- uses: actions/upload-artifact@v1
+    #  with:
+    #    name: info
+    #    path: info
 
     - name: Upload signed release
       uses: shogo82148/actions-upload-release-asset@v1.7.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.upload_info.outputs.upload_url }}
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ${{ steps.create_tag.outputs.apkRelSPath }}
         asset_name: ${{ steps.create_tag.outputs.apkRelSName }}
         asset_content_type: application/vnd.android.package-archive
@@ -104,7 +100,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.upload_info.outputs.upload_url }}
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ${{ steps.create_tag.outputs.apkRelUPath }}
         asset_name: ${{ steps.create_tag.outputs.apkreleaseuname }}
         asset_content_type: application/vnd.android.package-archive
@@ -114,21 +110,16 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.upload_info.outputs.upload_url }}
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ${{ steps.create_tag.outputs.apkDebPath }}
         asset_name: ${{ steps.create_tag.outputs.apkDebName }}
         asset_content_type: application/vnd.android.package-archive
 
-    - name: Set publish_info
-      id: publish_info
-      run: |
-        release_id=$(cat info/release_id)
-        echo "release_id=$release_id" >> $GITHUB_OUTPUT
     - uses: eregon/publish-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        release_id: ${{ steps.publish_info.outputs.release_id }}
+        release_id: ${{ steps.create_release.outputs.id }}
     - uses: eregon/keep-last-n-releases@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

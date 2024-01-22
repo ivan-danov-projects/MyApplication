@@ -68,6 +68,7 @@ android {
     }
     base {
         archivesName = "${ApplicationName}-${getVersionID()}"
+//         android.defaultConfig.versionName
     }
 
     def signingFile = "${ApplicationName}.signing"
