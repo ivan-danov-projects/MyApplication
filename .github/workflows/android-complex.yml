@@ -1,4 +1,4 @@
-name: Android CI
+name: Android Complex CI
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
   #  branches: [ "main" ]
 
 jobs:
-  build:
+  release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
 
@@ -75,6 +75,57 @@ jobs:
         name: info
         path: info
 
+  build:
+    name: Build Release
+    needs: [release]
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: "0"
+    - name: set up JDK 21
+      uses: actions/setup-java@v3
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: gradle
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Create version tag
+      id: create_tag
+      run: |
+        app=$(./gradlew -q printAppName)
+        ver=$(./gradlew -q printAppVersion)
+        tag=release-$ver-$(date +%Y%m%d-%H%M%S)
+        echo "ver=$ver" >> $GITHUB_OUTPUT
+        echo "tag=$tag" >> $GITHUB_OUTPUT
+        echo "apkRelUName=$app-$ver-release-unsigned.apk" >> $GITHUB_OUTPUT
+        echo "apkRelSName=$app-$ver-signedRelease.apk" >> $GITHUB_OUTPUT
+        echo "apkDebName=$app-$ver-debug.apk" >> $GITHUB_OUTPUT
+        echo "apkRelUPath=./app/build/outputs/apk/release/$app-$ver-release-unsigned.apk" >> $GITHUB_OUTPUT
+        echo "apkRelSPath=./app/build/outputs/apk/signedRelease/$app-$ver-signedRelease.apk" >> $GITHUB_OUTPUT
+        echo "apkDebPath=./app/build/outputs/apk/debug/$app-$ver-debug.apk" >> $GITHUB_OUTPUT
+
+    - name: Create signing info
+      id: create_signing
+      run: |
+        ApplicationName=$(./gradlew -q printAppName)
+        echo -n "${JKS}" | base64 --decode > ./${ApplicationName}.jks
+        echo "keystore=${PWD}/${ApplicationName}.jks" > ./${ApplicationName}.signing
+        echo "keystore.password=${JKS_PWD}" >> ./${ApplicationName}.signing
+        echo "keyAlias=${JKS_KEY_ALIAS}" >> ./${ApplicationName}.signing
+        echo "keyPassword=${JKS_KEY_PWD}" >> ./${ApplicationName}.signing
+      shell: bash
+      env:
+        JKS: ${{ secrets.JKS}}
+        JKS_PWD: ${{ secrets.JKS_PWD}}
+        JKS_KEY_ALIAS: ${{ secrets.JKS_KEY_ALIAS}}
+        JKS_KEY_PWD: ${{ secrets.JKS_KEY_PWD}}
+
+    - uses: actions/download-artifact@v1
+      with:
+        name: info
     - name: Set upload_url
       id: upload_info
       run: |
@@ -118,6 +169,14 @@ jobs:
         asset_name: ${{ steps.create_tag.outputs.apkDebName }}
         asset_content_type: application/vnd.android.package-archive
 
+  metadata:
+    name: Publish Release
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/download-artifact@v1
+      with:
+        name: info
     - name: Set publish_info
       id: publish_info
       run: |
