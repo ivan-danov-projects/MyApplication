@@ -37,6 +37,7 @@ android {
         def commitID = "${getGitHash()}"
         def branchName = "${getGitBranch()}"
         def vID = (getGitCommitCount(branchName).toDouble() / 100.0).round(2)
+        // only if not on main branch
         if (branchName != "main") {
             return "v${vID}_${commitID}[${branchName}]"
         } else {
@@ -45,7 +46,6 @@ android {
     }
 
     def ApplicationName = "MyApplication"
-
     defaultConfig {
         applicationId "com.example.myapplication"
         minSdk 24
@@ -54,14 +54,20 @@ android {
         multiDexEnabled true
         versionCode 1
         versionName "${getVersionID()}"
-        setProperty("archivesBaseName", "${ApplicationName}-${getVersionID()}")
+        // NOTE: deprecated
+        // setProperty("archivesBaseName", "${ApplicationName}-${getVersionID()}")
+
         ndk {
-            // On x86 devices that run Android API 23 or above, if the application is targeted with API 23 or
-            // above, FFmpeg lib might lead to runtime crashes or warnings.
-            abiFilters 'armeabi-v7a', 'arm64-v8a'
+             // On x86 devices that run Android API 23 or above, if the application is targeted with API 23 or
+             // above, FFMPEG lib might lead to runtime crashes or warnings.
+             //noinspection ChromeOsAbiSupport
+             abiFilters 'armeabi-v7a', 'arm64-v8a'
         }
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    base {
+        archivesName = "${ApplicationName}-${getVersionID()}"
     }
 
     def signingFile = "${ApplicationName}.signing"
@@ -84,7 +90,7 @@ android {
             signingFileFound = true
         } else {
             // println "DEBUG: Use key " + props['keyAlias'] + " from file " + props['keystore'] + ": no keystore!"
-            signingFileFound = false;
+            signingFileFound = false
         }
     } else {
         // println "DEBUG: SIGNING DISABLED 1"
@@ -121,12 +127,12 @@ android {
         viewBinding true
     }
 
-    task printAppName {
+    tasks.register('printAppName') {
         doLast {
             println "${ApplicationName}"
         }
     }
-    task printAppVersion {
+    tasks.register('printAppVersion') {
         doLast {
             println android.defaultConfig.versionName
         }
