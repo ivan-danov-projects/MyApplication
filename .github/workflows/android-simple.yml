@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: Create GitHub Release APKs
+    name: Create android APKs in new release
     runs-on: ubuntu-latest
 
     steps:
@@ -65,13 +65,14 @@ jobs:
       working-directory: .
 
     - name: Create Release
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: |
         ver=$(./gradlew -q printAppVersion)
         tag=release-$ver-$(date +%Y%m%d-%H%M%S)
         gh release create --latest \
           --title ${tag} ${tag} \
           $(find . -name '*.apk')
-
 
     #    uses: softprops/action-gh-release@v1
     #    if: startsWith(github.ref, 'refs/tags/')
