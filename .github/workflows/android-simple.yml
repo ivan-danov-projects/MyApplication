@@ -1,5 +1,4 @@
-name: Android Simple CI
-
+name: Create release with APKs
 on:
   workflow_dispatch:
   #push:
@@ -9,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Create android APKs in new release
+    name: Create release with APKs
     runs-on: ubuntu-latest
 
     steps:
@@ -24,21 +23,6 @@ jobs:
         cache: gradle
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-
-    #- name: Create version tag
-    #  id: create_tag
-    #  run: |
-    #    ver=$(./gradlew -q printAppVersion)
-    #    tag=release-$ver-$(date +%Y%m%d-%H%M%S)
-    #    echo "ver=$ver" >> $GITHUB_OUTPUT
-    #    echo "tag=$tag" >> $GITHUB_OUTPUT
-    #  #  app=$(./gradlew -q printAppName)
-    #  #  echo "apkRelUName=$app-$ver-release-unsigned.apk" >> $GITHUB_OUTPUT
-    #  #  echo "apkRelSName=$app-$ver-signedRelease.apk" >> $GITHUB_OUTPUT
-    #  #  echo "apkDebName=$app-$ver-debug.apk" >> $GITHUB_OUTPUT
-    #  #  echo "apkRelUPath=./app/build/outputs/apk/release/$app-$ver-release-unsigned.apk" >> $GITHUB_OUTPUT
-    #  #  echo "apkRelSPath=./app/build/outputs/apk/signedRelease/$app-$ver-signedRelease.apk" >> $GITHUB_OUTPUT
-    #  #  echo "apkDebPath=./app/build/outputs/apk/debug/$app-$ver-debug.apk" >> $GITHUB_OUTPUT
 
     - name: Create signing info
       id: create_signing
@@ -73,69 +57,9 @@ jobs:
         gh release create --latest \
           --title ${tag} ${tag} \
           $(find . -name '*.apk')
-
-    #    uses: softprops/action-gh-release@v1
-    #    if: startsWith(github.ref, 'refs/tags/')
-    #    with:
-    #      tag_name: ${{ steps.create_tag.outputs.tag }}
-    #      release_name: ${{ steps.create_tag.outputs.tag }}
-    #      draft: false
-    #      prerelease: false
-    #      fail_on_unmatched_files: false
-    #      files: |
-    #        ${{ steps.create_tag.outputs.apkRelSPath }}
-    #        ${{ steps.create_tag.outputs.apkreleaseuname }}
-    #        ${{ steps.create_tag.outputs.apkDebName }}
-
-
-    #- name: Create Release
-    #  id: create_release
-    #  uses: comnoco/create-release-action@v2.0.5
-    #  env:
-    #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #  with:
-    #    tag_name: ${{ steps.create_tag.outputs.tag }}
-    #    release_name: ${{ steps.create_tag.outputs.tag }}
-    #    draft: false
-    #    prerelease: false
-    #
-    #- name: Upload signed release
-    #  uses: shogo82148/actions-upload-release-asset@v1.7.2
-    #  env:
-    #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #  with:
-    #    upload_url: ${{ steps.create_release.outputs.upload_url }}
-    #    asset_path: ${{ steps.create_tag.outputs.apkRelSPath }}
-    #    asset_name: ${{ steps.create_tag.outputs.apkRelSName }}
-    #    asset_content_type: application/vnd.android.package-archive
-    #
-    #- name: Upload release
-    #  uses: shogo82148/actions-upload-release-asset@v1.7.2
-    #  env:
-    #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #  with:
-    #    upload_url: ${{ steps.create_release.outputs.upload_url }}
-    #    asset_path: ${{ steps.create_tag.outputs.apkRelUPath }}
-    #    asset_name: ${{ steps.create_tag.outputs.apkreleaseuname }}
-    #    asset_content_type: application/vnd.android.package-archive
-    #
-    #- name: Upload debug
-    #  uses: shogo82148/actions-upload-release-asset@v1.7.2
-    #  env:
-    #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #  with:
-    #    upload_url: ${{ steps.create_release.outputs.upload_url }}
-    #    asset_path: ${{ steps.create_tag.outputs.apkDebPath }}
-    #    asset_name: ${{ steps.create_tag.outputs.apkDebName }}
-    #    asset_content_type: application/vnd.android.package-archive
-    #
-    #- uses: eregon/publish-release@v1.0.5
-    #  env:
-    #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #  with:
-    #    release_id: ${{ steps.create_release.outputs.id }}
-    #- uses: eregon/keep-last-n-releases@v1
-    #  env:
-    #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #  with:
-    #    n: 10
+        # delete old relesses
+        gh release list --limit 500|tail -n +10 \
+          | cut -f3 \
+          | while read release_tag; do \
+          gh release delete --cleanup-tag -y "$release_tag" \
+          done
