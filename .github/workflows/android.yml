@@ -41,6 +41,7 @@ jobs:
 
     - name: Create signing info
       id: create_signing
+      if: ${{ env.JKS == '' }}
       run: |
         ApplicationName=$(./gradlew -q printAppName)
         echo -n "${JKS}" | base64 --decode > ./${ApplicationName}.jks
