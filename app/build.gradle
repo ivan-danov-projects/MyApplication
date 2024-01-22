@@ -36,7 +36,7 @@ android {
     def getVersionID = { ->
         def commitID = "${getGitHash()}"
         def branchName = "${getGitBranch()}"
-        def vID = (getGitCommitCount(branchName).toDouble() / 100.0).round(2)
+        def vID = String.format("%.2f", getGitCommitCount(branchName).toDouble() / 100.0)
         // only if not on main branch
         if (branchName != "main") {
             return "v${vID}_${commitID}[${branchName}]"
