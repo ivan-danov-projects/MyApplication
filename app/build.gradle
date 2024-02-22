@@ -111,20 +111,20 @@ android {
 
     buildTypes {
         debug {
-            versionNameSuffix "+debug"
+            versionNameSuffix "-debug"
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
-            versionNameSuffix ".${getGitHash()}"
+            //versionNameSuffix ".${getGitHash()}"
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         if (signingFileFound) {
             signedRelease {
-                versionNameSuffix ".${getGitHash()}"
+                //versionNameSuffix ".${getGitHash()}"
                 minifyEnabled true
                 shrinkResources true
                 proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

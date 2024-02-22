@@ -20,7 +20,7 @@ import com.example.myapplication.BuildConfig;
 public class SelfUpgradeService extends Service {
     private final String TAG = "XLIB SelfUpgrade service";
     public final int DownloadTimeoutError = 20;
-    public final int DownloadTimeout = 15 * 60;
+    public final int DownloadTimeout = 2 * 60;
     private String serverURL;
     private final String jsonFile = "upgrade.json";
     private final String downloadFileName = "newVersion.apk";
