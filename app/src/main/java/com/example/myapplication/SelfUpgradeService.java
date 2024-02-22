@@ -164,8 +164,12 @@ public class SelfUpgradeService extends Service {
         Uri fileURI;
         try {
             //File file = new File(localFilesDir + downloadFileName);
-            fileURI = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", new File(localFilesDir + "/" + downloadFileName));
+            fileURI = FileProvider.getUriForFile(this,
+                                                 getApplicationContext().getPackageName() +
+                                                 ".provider",
+                                                 new File(localFilesDir + "/" + downloadFileName));
         } catch (Exception ex) {
+            Log.d(TAG, "realUpgrade(FileProvider.getUriForFile) error");
             ex.printStackTrace();
             return;
         }
