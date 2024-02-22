@@ -28,7 +28,7 @@ EOF
 echo "Set GITHUB SECRETS"
 echo "JKS: " $(cat "${APP}.keystore.base64")
 echo "JKS_PWD: ${STORE_PASS}"
-echo "JKS_KEY_ALIAS: ${APP}Key"
+echo "JKS_KEY_ALIAS: ${APP} Key"
 echo "JKS_KEY_PWD: ${KEY_PASS}"
 
 # generate debug keystore

@@ -138,6 +138,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
 
     tasks.register('printAppName') {
