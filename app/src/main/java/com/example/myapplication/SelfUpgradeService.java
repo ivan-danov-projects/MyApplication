@@ -139,6 +139,14 @@ public class SelfUpgradeService extends Service {
 
         Log.d(TAG, "NEW Version found");
 
+        Log.d(TAG, "Delete old version file " + downloadFileName);
+        if (FileUtils.fileDeleteIfExists(downloadFileName) != 0) {
+            Log.e(TAG, "deleteFileIfExists(" + downloadFileName + ") fail");
+            return -1;
+        }
+        Log.d(TAG, "File " + downloadFileName + " deleted");
+
+
         try {
             serverVersionUrl = json.getString("url");
         } catch (JSONException e) {
