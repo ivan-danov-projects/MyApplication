@@ -108,10 +108,13 @@ public class FileUtils {
 
             byte[] buffer = new byte[1024];
             int bufferLength;
+            int fileLength = 0;
             while ((bufferLength = inputStream.read(buffer)) > 0) {
                 fileOutput.write(buffer, 0, bufferLength);
+                fileLength += bufferLength;
             }
-            Log.d(TAG, "File '" + file.getAbsolutePath() + "' downloaded from '" + fUrl + "'");
+            Log.d(TAG, "File '" + file.getAbsolutePath() + "'(" + fileLength +
+                  ") downloaded from '" + fUrl + "'");
             fileOutput.close();
         } catch (MalformedURLException e) {
             Log.e(TAG, "MalformedURLException: address '" + url + "', filename '" +

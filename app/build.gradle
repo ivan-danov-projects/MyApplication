@@ -48,8 +48,9 @@ android {
     def ApplicationName = "MyApplication"
     defaultConfig {
         applicationId "com.example.myapplication"
-        minSdk 24
-        targetSdk 34
+        minSdk 23
+        //noinspection ExpiredTargetSdkVersion
+        targetSdk 31
         versionCode 1
         multiDexEnabled true
         versionCode 1

@@ -4,18 +4,19 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.IBinder;
 import android.os.StrictMode;
 import android.util.Log;
+
 import androidx.core.content.FileProvider;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.File;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
-import com.example.myapplication.BuildConfig;
 
 public class SelfUpgradeService extends Service {
     private final String TAG = "XLIB SelfUpgrade service";
@@ -42,22 +43,26 @@ public class SelfUpgradeService extends Service {
 
         //String destination = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) + "/";
         File externalCacheDir = getExternalCacheDir();
-        if (externalCacheDir == null)
+        if (externalCacheDir == null) {
+            Log.e(TAG, "onStartCommand() externalCacheDir=null");
             return Service.START_REDELIVER_INTENT;
+        }
         String destination = externalCacheDir.getAbsolutePath();
         Log.d(TAG, "onStartCommand() download dir '" + destination + "'");
         localFilesDir = new File(destination);
-
         new Thread(() -> {
             try {
                 int timeout = DownloadTimeout;
-                int res = downloadNewVersion(BuildConfig.VERSION_NAME);
-                if (res == 1) {
-                    //
-                    realUpgrade(this);
-                } else if (res < 0) {
-                    timeout = DownloadTimeoutError;
-                }
+
+                //if (MainActivity.checkAppPermissions()) {
+                    int res = downloadNewVersion(BuildConfig.VERSION_NAME);
+                    if (res == 1) {
+                        //
+                        realUpgrade(this);
+                    } else if (res < 0) {
+                        timeout = DownloadTimeoutError;
+                    }
+                //}
                 Log.d(TAG, "onStartCommand() startService after " + timeout + " seconds");
                 timeout *= 1000; // milliseconds
 
@@ -181,6 +186,7 @@ public class SelfUpgradeService extends Service {
             ex.printStackTrace();
             return;
         }
+        Log.d(TAG, "realUpgrade("+localFilesDir + "/" + downloadFileName+")");
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         //Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
@@ -189,10 +195,10 @@ public class SelfUpgradeService extends Service {
                 "application/vnd.android.package-archive");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        intent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
+        // intent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
         intent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
 
-        StrictMode.VmPolicy oldVmPolicy = null;
+        StrictMode.VmPolicy oldVmPolicy;
 
         // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             oldVmPolicy = StrictMode.getVmPolicy();
@@ -201,7 +207,9 @@ public class SelfUpgradeService extends Service {
                 .build();
             StrictMode.setVmPolicy(policy);
         //}
+        Log.d(TAG, "startActivity("+localFilesDir + "/" + downloadFileName+") begin");
         context.startActivity(intent);
+        Log.d(TAG, "startActivity("+localFilesDir + "/" + downloadFileName+") done");
 
         if (oldVmPolicy != null) {
             StrictMode.setVmPolicy(oldVmPolicy);
